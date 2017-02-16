@@ -4,11 +4,28 @@ function Counter() {
 			'<div>',
 				'<h3>Counter</h3>',
 				'<div>Click anywhere to increment the counter!</div>',
-				'<div>Current count: {{ count }}</div>',
+				'<div>Current count: {{ countCtrl.count }}</div>',
 			'</div>'
 		].join(''),
-		controller: function ($scope) {
-			$scope.count = 0;
+		require: 'counter',
+		controller: function () {
+			this.count = 0;
+			this.addCount = function() {
+				this.count += 1;
+			};
+		},
+		controllerAs: 'countCtrl',
+
+		link: function(scope, element, attrs, ctrl) {
+			element.on('click', function() {
+				//debugger;
+				ctrl.addCount();
+				scope.$apply()
+			});
+
+			scope.$on('$destroy', function() {
+				element.off();
+			});
 		}
 	}
 }
